@@ -1,0 +1,6 @@
+key
+Pipfile.lock
+Pipfile
+__pycache__/
+.env
+node_modules
