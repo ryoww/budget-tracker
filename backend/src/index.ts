@@ -1,7 +1,9 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { createServer } from "http";
-import prismaClient from "./prisma";
+import { prismaClient } from "./prisma";
+import authRouter from "./routers/auth.router";
+import loggingMiddleware from "./middlewares/logger.middleware";
 
 if (!process.env.PORT) {
     throw new Error("PORT environment variable is not set");
@@ -23,6 +25,11 @@ app.use(
 app.get("/", (req: Request, res: Response) => {
     res.send("online");
 });
+
+app.set("trust proxy", true);
+app.use(loggingMiddleware());
+
+app.use("/auth", authRouter);
 
 const shutdown = () => {
     console.log("Shutting down server...");
