@@ -30,7 +30,7 @@ class authService {
         });
 
         return sendSuccessResponse(res, "CREATED", {
-            data: { id: user.id, email: user.email, viewName: user.viewName },
+            data: { id: user.id },
         });
     }
 
