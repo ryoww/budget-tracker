@@ -8,6 +8,9 @@ datasource db {
 }
 
 model User {
-    id    Int    @id @default(autoincrement())
-    email String @unique
+    id        String   @id @default(cuid())
+    email     String   @unique
+    password  String
+    viewName  String
+    createdAt DateTime @default(now())
 }
