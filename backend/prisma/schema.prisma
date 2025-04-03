@@ -8,9 +8,79 @@ datasource db {
 }
 
 model User {
-    id        String   @id @default(cuid())
-    email     String   @unique
-    password  String
-    viewName  String
+    id       String @id @default(cuid())
+    email    String @unique
+    password String
+    viewName String
+
+    records      Record[]
+    categories   Category[]
+    tempReceipts tempReceipt[]
+    createdAt    DateTime      @default(now())
+}
+
+model Record {
+    id     String   @id @default(cuid())
+    store  String
+    date   DateTime
+    total  Int
+    change Int?
+
+    method paymentMethod?
+
+    items Item[]
+
+    categoryId Int?
+    category   Category? @relation(fields: [categoryId], references: [id])
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
     createdAt DateTime @default(now())
+}
+
+model tempReceipt {
+    id     String   @id @default(cuid())
+    store  String
+    date   DateTime
+    total  Int
+    change Int?
+
+    method paymentMethod?
+
+    rawJson Json
+
+    userId    String
+    User      User?    @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now())
+}
+
+model Item {
+    id       String @id @default(cuid())
+    name     String
+    price    Int
+    recordId String
+    record   Record @relation(fields: [recordId], references: [id])
+}
+
+model Category {
+    id     Int          @id @default(autoincrement())
+    name   String
+    type   categoryType
+    userId String
+    user   User         @relation(fields: [userId], references: [id])
+    Record Record[]
+}
+
+enum paymentMethod {
+    cash
+    credit
+    ID
+    PayPay
+    other
+}
+
+enum categoryType {
+    INCOME
+    EXPENSE
 }
