@@ -4,7 +4,15 @@ import receiptService from "../services/receipt/receipt.service";
 import { authMiddleware } from "../middlewares/auth.middleware";
 
 const receiptRouter = Router();
-const upload = multer({ dest: "uploads/" });
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: "./uploads",
+        filename(req, file, callback) {
+            const uniqueName = `${Date.now()}-${file.originalname}`;
+            callback(null, uniqueName);
+        },
+    }),
+});
 
 receiptRouter.post(
     "/parse",
