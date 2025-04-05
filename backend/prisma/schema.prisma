@@ -24,7 +24,7 @@ model Record {
     store      String
     date       DateTime
     total      Int
-    change     Int?
+    change     Int            @default(0)
     method     paymentMethod?
     items      Item[]
     categoryId Int?
