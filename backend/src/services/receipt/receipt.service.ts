@@ -106,6 +106,29 @@ class receiptService {
             return sendErrorResponse(res, "INTERNAL_SERVER_ERROR");
         }
     }
+
+    public static async getAllTempReceipts(req: Request, res: Response) {
+        try {
+            const userId = req.user?.userId;
+
+            const receipts = await prismaClient.tempReceipt.findMany({
+                where: {
+                    userId: userId,
+                },
+                include: {
+                    items: true,
+                },
+                orderBy: {
+                    createdAt: "desc",
+                },
+            });
+
+            return sendSuccessResponse(res, "OK", { data: receipts });
+        } catch (error) {
+            console.error("Error fetching temp receipts:", error);
+            return sendErrorResponse(res, "INTERNAL_SERVER_ERROR");
+        }
+    }
 }
 
 export default receiptService;

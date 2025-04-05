@@ -73,7 +73,7 @@ class authService {
             }
 
             const token = jwt.sign(
-                { userId: user.id, viewName: user.viewName },
+                { userId: user.id, viewName: user.viewName, email: user.email },
                 JWT_SECRET,
                 {
                     expiresIn: "2d",

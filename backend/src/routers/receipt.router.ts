@@ -21,4 +21,10 @@ receiptRouter.post(
     receiptService.parseReceipt
 );
 
+receiptRouter.get(
+    "/temp-receipts",
+    authMiddleware,
+    receiptService.getAllTempReceipts
+);
+
 export default receiptRouter;
