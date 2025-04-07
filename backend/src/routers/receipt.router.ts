@@ -14,17 +14,8 @@ const upload = multer({
     }),
 });
 
-receiptRouter.post(
-    "/parse",
-    authMiddleware,
-    upload.single("receipt"),
-    receiptService.parseReceipt
-);
+receiptRouter.post("/parse", authMiddleware, upload.single("receipt"), receiptService.parseReceipt);
 
-receiptRouter.get(
-    "/temp-receipts",
-    authMiddleware,
-    receiptService.getAllTempReceipts
-);
+receiptRouter.get("/temp-receipts", authMiddleware, receiptService.getAllTempReceipts);
 
 export default receiptRouter;
