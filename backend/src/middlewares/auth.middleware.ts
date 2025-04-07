@@ -17,8 +17,18 @@ export const authMiddleware = (
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        (req as any).user = decoded;
+        const decoded = jwt.verify(token, JWT_SECRET) as {
+            userId: string;
+            email: string;
+            viewName: string;
+        };
+
+        req.user = {
+            userId: decoded.userId,
+            email: decoded.email,
+            viewName: decoded.viewName,
+        };
+
         next();
     } catch (error) {
         return sendErrorResponse(res, "INVALID_CREDENTIAL");

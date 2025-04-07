@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-    id       String @id @default(cuid())
-    email    String @unique
-    password String
-    viewName String
-
+    id           String        @id @default(cuid())
+    email        String        @unique
+    password     String
+    viewName     String
+    budget       Int           @default(0)
     records      Record[]
     categories   Category[]
     tempReceipts tempReceipt[]
@@ -20,56 +20,52 @@ model User {
 }
 
 model Record {
-    id     String   @id @default(cuid())
-    store  String
-    date   DateTime
-    total  Int
-    change Int?
-
-    method paymentMethod?
-
-    items Item[]
-
+    id         String         @id @default(cuid())
+    store      String
+    date       DateTime
+    total      Int
+    change     Int            @default(0)
+    method     paymentMethod?
+    items      Item[]
     categoryId Int?
-    category   Category? @relation(fields: [categoryId], references: [id])
-
-    userId String
-    user   User   @relation(fields: [userId], references: [id])
-
-    createdAt DateTime @default(now())
+    category   Category?      @relation(fields: [categoryId], references: [id])
+    userId     String
+    user       User           @relation(fields: [userId], references: [id])
+    createdAt  DateTime       @default(now())
 }
 
 model tempReceipt {
-    id     String   @id @default(cuid())
-    store  String
-    date   DateTime
-    total  Int
-    change Int?
-
-    method paymentMethod?
-
-    rawJson Json
-
+    id        String         @id @default(cuid())
+    store     String
+    date      DateTime
+    total     Int
+    change    Int?
+    method    paymentMethod?
+    rawJson   Json
+    imagePath String?
     userId    String
-    User      User?    @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
+    user      User           @relation(fields: [userId], references: [id])
+    createdAt DateTime       @default(now())
+    items     Item[]         @relation("TempReceiptItems")
 }
 
 model Item {
-    id       String @id @default(cuid())
-    name     String
-    price    Int
-    recordId String
-    record   Record @relation(fields: [recordId], references: [id])
+    id            String       @id @default(cuid())
+    name          String
+    price         Int
+    recordId      String?
+    record        Record?      @relation(fields: [recordId], references: [id])
+    tempReceiptId String?
+    tempReceipt   tempReceipt? @relation("TempReceiptItems", fields: [tempReceiptId], references: [id])
 }
 
 model Category {
-    id     Int          @id @default(autoincrement())
-    name   String
-    type   categoryType
-    userId String
-    user   User         @relation(fields: [userId], references: [id])
-    Record Record[]
+    id      Int          @id @default(autoincrement())
+    name    String
+    type    categoryType
+    userId  String
+    user    User         @relation(fields: [userId], references: [id])
+    records Record[]
 }
 
 enum paymentMethod {

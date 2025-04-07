@@ -4,6 +4,7 @@ import { createServer } from "http";
 import { prismaClient } from "./prisma";
 import authRouter from "./routers/auth.router";
 import loggingMiddleware from "./middlewares/logger.middleware";
+import receiptRouter from "./routers/receipt.router";
 
 if (!process.env.PORT) {
     throw new Error("PORT environment variable is not set");
@@ -30,6 +31,7 @@ app.set("trust proxy", true);
 app.use(loggingMiddleware());
 
 app.use("/auth", authRouter);
+app.use("/receipt", receiptRouter);
 
 const shutdown = () => {
     console.log("Shutting down server...");
