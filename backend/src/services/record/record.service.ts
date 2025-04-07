@@ -117,7 +117,7 @@ class recordService {
                         store: store,
                         date: new Date(date),
                         total: total,
-                        change: change,
+                        change: change ?? undefined,
                         method: method ?? undefined,
                         categoryId: categoryId ?? undefined,
                         items: {
