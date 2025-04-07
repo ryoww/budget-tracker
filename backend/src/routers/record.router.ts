@@ -4,8 +4,8 @@ import recordService from "../services/record/record.service";
 
 const recordRouter = Router();
 
-recordRouter.post("/createReceipt", authMiddleware, recordService.createReceipt);
+recordRouter.post("/", authMiddleware, recordService.createReceipt);
 
-recordRouter.put("/updateReceipt", authMiddleware, recordService.updateRecord);
+recordRouter.put("/", authMiddleware, recordService.updateRecord);
 
 export default recordRouter;

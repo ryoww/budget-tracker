@@ -32,6 +32,7 @@ app.use(loggingMiddleware());
 
 app.use("/auth", authRouter);
 app.use("/receipt", receiptRouter);
+app.use("/record", receiptRouter);
 
 const shutdown = () => {
     console.log("Shutting down server...");
