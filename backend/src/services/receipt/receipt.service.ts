@@ -22,26 +22,32 @@ class receiptService {
             Please extract the following information and return it in JSON format:
 
             - Store name ("store")
-            - Date and time of purchase ("date")
+            - Date and time of purchase ("date") in ISO 8601 format (e.g., "2025-04-10T14:30:00") so it can be directly used in JavaScript's Date constructor.
             - List of purchased items ("items"):
                 Each item should include:
                 - Name ("name")
                 - Price in yen ("price")
             - If there are discounts, include them as items with a negative price.
             - Total amount ("total")
-            - Payment method and change ("payment.method" and "payment.change")
+            - Payment method ("payment.method") must be one of the following values:
+                - "cash"
+                - "credit"
+                - "ID"
+                - "PayPay"
+                - "other"
+            - Change returned ("payment.change")
 
             Return the result using this JSON structure:
 
             {
             "store": "",
-            "date": "",
+            "date": "2025-04-10T14:30:00",
             "items": [
                 { "name": "", "price": 0 }
             ],
             "total": 0,
             "payment": {
-                "method": "",
+                "method": "cash",
                 "change": 0
             }
             }`;
@@ -69,6 +75,8 @@ class receiptService {
             if (!content) {
                 return sendErrorResponse(res, "INTERNAL_SERVER_ERROR");
             }
+
+            console.log("Response from OpenAI:", content);
 
             const cleaned = content.replace(/```json|```/g, "").trim();
             const json = JSON.parse(cleaned);
