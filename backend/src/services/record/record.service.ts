@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import fs from "fs/promises";
 import { sendErrorResponse, sendSuccessResponse } from "../../lib/sendResponse";
 import { prismaClient } from "../../prisma";
+import { endOfMonth, startOfMonth } from "date-fns";
 
 class recordService {
     public static async createReceipt(req: Request, res: Response) {
@@ -137,6 +138,45 @@ class recordService {
             return sendSuccessResponse(res, "OK", { data: update });
         } catch (error) {
             console.error("Error updating record:", error);
+            return sendErrorResponse(res, "INTERNAL_SERVER_ERROR");
+        }
+    }
+
+    public static async getMonthlyRecords(req: Request, res: Response) {
+        try {
+            const userId = req.user?.userId;
+            if (!userId) {
+                return sendErrorResponse(res, "MISSING_PARAMETERS");
+            }
+
+            const year = Number(req.query.year);
+            const month = Number(req.query.month);
+            if (!year || !month || month < 1 || month > 12) {
+                return sendErrorResponse(res, "MISSING_PARAMETERS");
+            }
+
+            const from = startOfMonth(new Date(year, month - 1));
+            const to = endOfMonth(from);
+
+            const records = await prismaClient.record.findMany({
+                where: {
+                    userId: userId,
+                    date: {
+                        gte: from,
+                        lte: to,
+                    },
+                },
+                include: {
+                    items: true,
+                },
+                orderBy: {
+                    date: "asc",
+                },
+            });
+
+            return sendSuccessResponse(res, "OK", { data: records });
+        } catch (error) {
+            console.error("Error fetching monthly records:", error);
             return sendErrorResponse(res, "INTERNAL_SERVER_ERROR");
         }
     }

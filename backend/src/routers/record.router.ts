@@ -8,4 +8,7 @@ recordRouter.post("/", authMiddleware, recordService.createReceipt);
 
 recordRouter.put("/", authMiddleware, recordService.updateRecord);
 
+// GET /records/?year=2023&month=10
+recordRouter.get("/", authMiddleware, recordService.getMonthlyRecords);
+
 export default recordRouter;
