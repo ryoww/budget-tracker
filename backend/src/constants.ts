@@ -1,3 +1,15 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+const getEnv = (key: string) : string => {
+    const value =process.env[key];
+    if (!value) {
+        throw new Error(`Environment variable ${key} is not set`);
+    }
+    return value;
+}
+
+
 export const ErrorCodes = {
     INTERNAL_SERVER_ERROR: { status: "internal-server-error", code: 500 },
     TOKEN_NOT_FOUND: { status: "token-not-found", code: 401 },
@@ -48,3 +60,5 @@ export const SuccessCodes = {
     ALREADY_REPORTED: { status: "already-reported", code: 208 },
     IM_USED: { status: "im-used", code: 226 },
 };
+
+

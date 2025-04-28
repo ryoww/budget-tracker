@@ -1,4 +1,9 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { PasswordInput, PasswordStrengthMeter } from "@/components/ui/password-input";
+import { axiosClient } from "@/utils/axiosClient";
+import { Box, Heading, VStack, Field, Input, Stack } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Register() {
@@ -18,8 +23,56 @@ export default function Register() {
         }
 
         try {
-        } catch (error) {
-            setError("登録に失敗しました。");
+            const res = await axiosClient.post("/register", {
+                email,
+                password,
+                viewName,
+            })
+
+            router.push("/login");
+        } catch (error: any) {
+            if (error.response) {
+                setError(error.response.data.message);
+            }
+            else { 
+
+                setError(error.message);
+            }
+
         }
     };
+
+    return <>
+        <Box maxW="md" mx="auto" mt={8}>
+
+            <Heading mb={6}>Register</Heading>
+
+            <VStack spaceY={4} spaceX={4} align="stretch">
+                <Field.Root>
+                    <Field.Label>Email</Field.Label>
+                    <Field.RequiredIndicator />
+                    <Input placeholder="example@example.com" /> 
+                    <Field.ErrorText>{error}</Field.ErrorText>
+                </Field.Root>
+
+                <Field.Root>
+                    <Field.Label>Password</Field.Label>
+                    <Field.RequiredIndicator />
+                    <PasswordInput placeholder="********" />
+                    {/* <PasswordStrengthMeter value={2} /> */}
+                    <Field.ErrorText>{error}</Field.ErrorText>
+                    
+                </Field.Root>
+
+                <Stack m={0}>
+                    <PasswordInput placeholder="********" />
+                    <PasswordStrengthMeter value={0} />
+                </Stack>
+
+
+
+            </VStack>
+
+        </Box>
+    </>
 }
